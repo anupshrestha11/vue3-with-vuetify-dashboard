@@ -1,7 +1,7 @@
-import { auth } from "@/http";
+import { http } from "@/http";
 
 function fetchPlots() {
-  return auth.get("plots");
+  return http.get("plots");
 }
 
 export default {

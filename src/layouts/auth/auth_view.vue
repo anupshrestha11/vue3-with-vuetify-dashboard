@@ -1,9 +1,8 @@
 <script setup>
-import { useLoginPageStore } from "@/modules/login/store";
+import { useAuthStore } from "@/modules/login/store";
 import { reactive } from "vue";
-import router from "@/router";
 
-const authStore = useLoginPageStore();
+const authStore = useAuthStore();
 
 function logout() {
   authStore.logout();

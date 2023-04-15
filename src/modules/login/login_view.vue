@@ -21,7 +21,7 @@ function onSubmit() {
 <template>
   <v-form
     @submit.prevent="onSubmit"
-    v-model="valid"
+    v-model="state.valid"
     class="d-flex justify-center align-center h-screen flex-column"
   >
     <h1 class="text-center mb-5">Legends Properties Agency</h1>

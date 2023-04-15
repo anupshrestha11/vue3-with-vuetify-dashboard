@@ -1,14 +1,14 @@
-import { auth } from "@/http";
+import { http } from "@/http";
 
 function login(data) {
-  return auth.post("login", data).catch((error) => {
-    alert(error.response.status);
+  return http.post("login", data).catch((error) => {
+    console.log(error);
   });
 }
 
 function logout() {
-  return auth.post("logout").catch((error) => {
-    alert(error.response.status);
+  return http.post("logout").catch((error) => {
+    console.log(error.response);
   });
 }
 

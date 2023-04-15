@@ -2,13 +2,11 @@ import { defineStore } from "pinia";
 import service from "./service";
 import router from "@/router";
 
-const defaults = {
-  user: JSON.parse(localStorage.getItem("user")),
-  returnUrl: null,
-};
-
 export const useAuthStore = defineStore("auth", {
-  state: () => defaults,
+  state: () => ({
+    user: JSON.parse(localStorage.getItem("user")),
+    returnUrl: null,
+  }),
   actions: {
     async login(email, password) {
       const response = await service.login({

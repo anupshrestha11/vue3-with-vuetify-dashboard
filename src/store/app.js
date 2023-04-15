@@ -1,8 +1,7 @@
 // Utilities
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
+import { useAuthStore } from "@/modules/login/store";
 
-export const useAppStore = defineStore('app', {
-  state: () => ({
-    //
-  }),
-})
+export const useAppStore = defineStore("app", {
+  auth: useAuthStore(),
+});
