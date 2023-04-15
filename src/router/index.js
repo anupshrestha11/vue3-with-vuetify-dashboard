@@ -1,5 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "@/modules/login/store";
 
 const routes = [
   {
@@ -13,7 +14,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import("@/modules/home/home_page.vue"),
+        component: () => import("@/modules/home/home_view.vue"),
         meta: {
           layout: "auth",
         },
@@ -31,7 +32,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import("@/modules/login/login_page.vue"),
+        component: () => import("@/modules/login/login_view.vue"),
       },
     ],
   },
@@ -39,7 +40,19 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  linkActiveClass: "active",
   routes,
+});
+
+router.beforeEach((to) => {
+  const publicPages = ["/login"];
+  const authRequired = !publicPages.includes(to.path);
+  const auth = useAuthStore();
+
+  if (authRequired && !auth.user) {
+    auth.returnUrl = to.fullPath;
+    return "/login";
+  }
 });
 
 export default router;

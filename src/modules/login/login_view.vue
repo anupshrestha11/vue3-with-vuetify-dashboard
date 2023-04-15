@@ -1,10 +1,9 @@
 <script setup>
 import { reactive } from "vue";
-import { useLoginPageStore } from "./store";
-import { useRouter } from "vue-router";
+import { useAuthStore } from "./store";
+import router from "@/router";
 
-const store = useLoginPageStore();
-const router = useRouter();
+const store = useAuthStore();
 
 const state = reactive({
   email: null,

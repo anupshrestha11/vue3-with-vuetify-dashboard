@@ -1,15 +1,12 @@
 <script setup>
 import { useLoginPageStore } from "@/modules/login/store";
 import { reactive } from "vue";
-import { useRouter } from "vue-router";
+import router from "@/router";
 
-const router = useRouter();
 const authStore = useLoginPageStore();
 
 function logout() {
-  authStore.logout().finally(() => {
-    router.push("/login");
-  });
+  authStore.logout();
 }
 
 const drawer = reactive({ toggle: false });
