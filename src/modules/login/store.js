@@ -13,9 +13,11 @@ export const useAuthStore = defineStore("auth", {
         email: email,
         password: password,
       });
+
       const user = response.data;
+      this.user = user;
       localStorage.setItem("user", JSON.stringify(user));
-      router.push(this.returnUrl || "/");
+      router.push(this.returnUrl || { name: "home" });
     },
     async logout() {
       try {
@@ -23,7 +25,7 @@ export const useAuthStore = defineStore("auth", {
       } finally {
         this.user = null;
         localStorage.removeItem("user");
-        router.push("/");
+        router.push("/login");
       }
     },
   },

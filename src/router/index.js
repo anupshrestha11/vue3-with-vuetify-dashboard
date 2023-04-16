@@ -10,7 +10,7 @@ const routes = [
     children: [
       {
         path: "",
-        name: "Home",
+        name: "home",
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -48,6 +48,8 @@ router.beforeEach((to) => {
   const publicPages = ["/login"];
   const authRequired = !publicPages.includes(to.path);
   const auth = useAuthStore();
+
+  console.log(authRequired, auth.user);
 
   if (authRequired && !auth.user) {
     auth.returnUrl = to.fullPath;
