@@ -2,12 +2,13 @@
 import { computed } from "vue";
 import PropertyCard from "./components/property_card.vue";
 import { useHomePageStore } from "./store";
+import { handleError } from "@/utils/error";
 
 const homeStore = useHomePageStore();
 
 const availableSlots = computed(() => homeStore.availableSlots);
 
-homeStore.fetchPlots();
+homeStore.fetchPlots().catch(handleError);
 </script>
 <template>
   <v-container>

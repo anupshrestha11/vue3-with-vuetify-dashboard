@@ -1,15 +1,12 @@
 import { http } from "@/http";
+import { commonErrorHandler } from "@/utils";
 
 function login(data) {
-  return http.post("login", data).catch((error) => {
-    console.log(error);
-  });
+  return http.post("login", data).catch(commonErrorHandler);
 }
 
 function logout() {
-  return http.post("logout").catch((error) => {
-    console.log(error.response);
-  });
+  return http.post("logout").catch(commonErrorHandler);
 }
 
 export default {

@@ -1,6 +1,7 @@
 <script setup>
 import { useAuthStore } from "@/modules/login/store";
 import { reactive } from "vue";
+import StatusMessage from "@/components/status-message.vue";
 
 const authStore = useAuthStore();
 
@@ -59,6 +60,7 @@ function toggleDrawer() {
     <v-main>
       <v-container>
         <router-view />
+        <status-message></status-message>
       </v-container>
     </v-main>
   </v-layout>

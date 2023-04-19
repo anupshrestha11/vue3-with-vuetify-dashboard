@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useAuthStore } from "./store";
+import { handleError } from "@/utils/error";
 
 const store = useAuthStore();
 
@@ -15,7 +16,9 @@ const loginForm = ref(null);
 function onSubmit() {
   loginForm.value.validate().then(({ valid }) => {
     if (valid) {
-      store.login(state.email, state.password);
+      store.login(state.email, state.password).catch((error) => {
+        handleError(error);
+      });
     }
   });
 }

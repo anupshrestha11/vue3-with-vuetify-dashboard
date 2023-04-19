@@ -1,7 +1,8 @@
 import { http } from "@/http";
+import { commonErrorHandler } from "@/utils";
 
 function fetchPlots() {
-  return http.get("plots");
+  return http.get("plots").catch(commonErrorHandler);
 }
 
 export default {

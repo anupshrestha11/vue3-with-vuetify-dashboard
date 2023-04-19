@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import service from "./service";
 import router from "@/router";
+import { handleError } from "@/utils/error";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -8,25 +9,25 @@ export const useAuthStore = defineStore("auth", {
     returnUrl: null,
   }),
   actions: {
-    async login(email, password) {
-      const response = await service.login({
-        email: email,
-        password: password,
-      });
-
-      const user = response.data;
-      this.user = user;
-      localStorage.setItem("user", JSON.stringify(user));
-      router.push(this.returnUrl || { name: "home" });
+    login(email, password) {
+      return service
+        .login({
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          const user = response.data;
+          this.user = user;
+          localStorage.setItem("user", JSON.stringify(user));
+          router.push(this.returnUrl || { name: "home" });
+        })
     },
     async logout() {
-      try {
-        return await service.logout();
-      } finally {
+      return service.logout().finally(() => {
         this.user = null;
         localStorage.removeItem("user");
         router.push("/login");
-      }
+      });
     },
   },
 });
