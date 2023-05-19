@@ -9,12 +9,20 @@ const routes = [
     component: () => import("@/layouts/auth/auth_layout.vue"),
     children: [
       {
-        path: "",
+        path: "/home",
         name: "home",
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import("@/modules/home/home_view.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
+      {
+        path: "/properties",
+        name: "properties",
+        component: () => import("@/modules/properties/page_view.vue"),
         meta: {
           layout: "auth",
         },
@@ -53,6 +61,14 @@ router.beforeEach((to) => {
     auth.returnUrl = to.fullPath;
     return "/login";
   }
+  
+  const redirectPages = ["/", "/login"]
+  const redirectToHome = redirectPages.includes(to.path)
+
+  if (auth.user && redirectToHome) {
+    return "/home";
+  }
+
 });
 
 export default router;

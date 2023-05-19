@@ -43,17 +43,19 @@ function toggleDrawer() {
           prepend-icon="mdi-view-dashboard"
           title="Dashboard"
           value="dashboard"
-          active=""
+          :to="{ name: 'home' }"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-folder"
           title="Properties"
           value="properties"
+          :to="{ name: 'properties' }"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-account-multiple"
           title="Users"
           value="users"
+          to="/users"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
