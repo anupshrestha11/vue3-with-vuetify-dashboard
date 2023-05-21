@@ -2,6 +2,7 @@
 import { useAuthStore } from "@/modules/login/store";
 import { reactive } from "vue";
 import StatusMessage from "@/components/status-message.vue";
+import AuthSidebar from "./auth_sidebar.vue"
 
 const authStore = useAuthStore();
 
@@ -37,27 +38,7 @@ function toggleDrawer() {
       </v-list>
 
       <v-divider></v-divider>
-
-      <v-list density="compact" nav>
-        <v-list-item
-          prepend-icon="mdi-view-dashboard"
-          title="Dashboard"
-          value="dashboard"
-          :to="{ name: 'home' }"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-folder"
-          title="Properties"
-          value="properties"
-          :to="{ name: 'properties' }"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-account-multiple"
-          title="Users"
-          value="users"
-          to="/users"
-        ></v-list-item>
-      </v-list>
+    <auth-sidebar></auth-sidebar>
     </v-navigation-drawer>
     <v-main>
       <v-container>

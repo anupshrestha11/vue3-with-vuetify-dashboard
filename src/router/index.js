@@ -27,6 +27,14 @@ const routes = [
           layout: "auth",
         },
       },
+      {
+        path: "/projects",
+        name: "projects",
+        component: () => import("@/modules/projects/projects-page.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
     ],
   },
   {
@@ -61,14 +69,13 @@ router.beforeEach((to) => {
     auth.returnUrl = to.fullPath;
     return "/login";
   }
-  
-  const redirectPages = ["/", "/login"]
-  const redirectToHome = redirectPages.includes(to.path)
+
+  const redirectPages = ["/", "/login"];
+  const redirectToHome = redirectPages.includes(to.path);
 
   if (auth.user && redirectToHome) {
     return "/home";
   }
-
 });
 
 export default router;
