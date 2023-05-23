@@ -1,19 +1,25 @@
 <script setup>
+import { useAuthLayoutStore } from "./store";
 import { useAuthStore } from "@/modules/login/store";
-import { reactive } from "vue";
+import { computed } from "vue";
 import StatusMessage from "@/components/status-message.vue";
 import AuthSidebar from "./auth_sidebar.vue";
 
 const authStore = useAuthStore();
+const authLayoutStore = useAuthLayoutStore();
 
 function logout() {
   authStore.logout();
 }
 
-const drawer = reactive({ toggle: true, rail: false });
+const toggle = computed(() => authLayoutStore.toggle);
+const rail = computed(() => authLayoutStore.rail);
 
 function toggleDrawer() {
-  drawer.toggle = !drawer.toggle;
+  authLayoutStore.toggleDrawer();
+}
+function railDrawer(rail) {
+  authLayoutStore.railDrawer(rail);
 }
 </script>
 
@@ -23,15 +29,14 @@ function toggleDrawer() {
       <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
       <v-app-bar-title>Legends</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn prepend-icon="mdi-logout" variant="flat" @click="logout"
-        >Logout</v-btn
-      >
+      <v-btn icon="mdi-logout" @click="logout"></v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
-      v-model="drawer.toggle"
-      :rail="drawer.rail"
-      @click="drawer.rail = false"
+      elevation="2"
+      v-model="toggle"
+      :rail="rail"
+      @click="railDrawer(false)"
     >
       <v-list-item
         prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
@@ -43,7 +48,7 @@ function toggleDrawer() {
           <v-btn
             variant="text"
             icon="mdi-chevron-left"
-            @click.stop="drawer.rail = !drawer.rail"
+            @click.stop="railDrawer(true)"
           ></v-btn>
         </template>
       </v-list-item>
