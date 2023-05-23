@@ -1,24 +1,27 @@
 import { defineStore } from "pinia";
 import service from "./service";
 
+const defaultItem = {
+  title: null,
+  description: null,
+  provinceId: null,
+  districtId: null,
+  municipalityId: null,
+  status: null,
+  ward: null,
+  tole: null,
+  images: null,
+};
+
 export const useProjectsStore = defineStore("projectsPage", {
   state: () => ({
-    form: {
-      title: null,
-      description: null,
-      provinceId: null,
-      districtId: null,
-      municipalityId: null,
-      status: null,
-      ward: null,
-      tole: null,
-      images: null,
-    },
     provinces: [],
     districts: [],
     municipalities: [],
     projects: [],
     projectsPagination: null,
+    editIntex: -1,
+    editItem: { ...defaultItem },
   }),
   actions: {
     fetchProvinces() {
@@ -64,17 +67,7 @@ export const useProjectsStore = defineStore("projectsPage", {
       });
     },
     clearForm() {
-      this.form = {
-        title: null,
-        description: null,
-        provinceId: null,
-        districtId: null,
-        municipalityId: null,
-        status: null,
-        ward: null,
-        tole: null,
-        images: null,
-      };
+      this.editItem = Object.assign({}, defaultItem);
     },
   },
 });

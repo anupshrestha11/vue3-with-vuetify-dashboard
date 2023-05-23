@@ -32,17 +32,13 @@ function railDrawer(rail) {
       <v-btn icon="mdi-logout" @click="logout"></v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer
-      elevation="2"
-      v-model="toggle"
-      :rail="rail"
-      @click="railDrawer(false)"
-    >
+    <v-navigation-drawer elevation="2" v-model="toggle" :rail="rail">
       <v-list-item
         prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
         title="Admin"
         subtitle="admin@gmail.com"
         nav
+        @click="railDrawer(false)"
       >
         <template v-slot:append>
           <v-btn

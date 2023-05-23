@@ -2,13 +2,14 @@
 import { reactive, computed, onMounted, ref } from "vue";
 import { useProjectsStore } from "../store";
 import { handleError } from "@/utils/error";
+import { projectsStatus } from "../util";
 
 const store = useProjectsStore();
 
-const project = computed(() => store.form);
+const project = computed(() => store.editItem);
 
 onMounted(() => {
-  store.fetchProvinces();
+  store.fetchProvinces().catch(handleError);
 });
 
 const provinces = computed(() => store.provinces);
@@ -20,27 +21,12 @@ const state = reactive({
   form: false,
 });
 
-const projectsStatus = [
-  {
-    title: "Up-Comming",
-    value: 1,
-  },
-  {
-    title: "On-Going",
-    value: 2,
-  },
-  {
-    title: "Completed",
-    value: 3,
-  },
-];
-
 function fetchDistrices() {
-  store.fetchDistrices(project.value.provinceId);
+  store.fetchDistrices(project.value.provinceId).catch(handleError);
 }
 
 function fetchMunicipalities() {
-  store.fetchMunicipalities(project.value.districtId);
+  store.fetchMunicipalities(project.value.districtId).catch(handleError);
 }
 
 const projectForm = ref(null);
@@ -48,17 +34,8 @@ const projectForm = ref(null);
 function submit() {
   projectForm.value.validate().then(({ valid }) => {
     if (valid) {
-      const data = {
-        title: project.value.title,
-        description: project.value.description,
-        province_id: project.value.provinceId,
-        district_id: project.value.districtId,
-        municipality_id: project.value.municipalityId,
-        ward: project.value.ward,
-        tole: project.value.tole,
-        images: project.value.images,
-        status: project.value.status,
-      };
+      const data = getData();
+      console.log(data);
 
       store
         .addProject(data)
@@ -69,6 +46,31 @@ function submit() {
         .catch(handleError);
     }
   });
+}
+
+function getData() {
+  const {
+    title,
+    description,
+    provinceId: province_id,
+    districtId: district_id,
+    municipalityId: municipality_id,
+    ward,
+    tole,
+    images,
+    status,
+  } = project.value;
+  return {
+    title,
+    ward,
+    tole,
+    images,
+    status,
+    description,
+    province_id,
+    district_id,
+    municipality_id,
+  };
 }
 
 const closeDialog = () => {
@@ -128,7 +130,7 @@ function clearForm() {
             prepend-icon=""
             prepend-inner-icon="mdi-camera"
             v-model="project.images"
-            multiple="2"
+            multiple
             chips
           ></v-file-input>
 

@@ -6,6 +6,7 @@ export class ForbiddenError extends Error {}
 export class ServerError extends Error {}
 export class UnauthorizedError extends Error {}
 export class UserCredentialsError extends Error {}
+export class NotFoundError extends Error {}
 
 export function handleError(error) {
   const auth = useAuthStore();
@@ -17,7 +18,7 @@ export function handleError(error) {
       text: "Something went wrong",
       shown: true,
       color: "error",
-      id: "error--general",
+      id: "error--unauthorized",
     };
     snackbar.setMessage(data);
   } else if (error instanceof BadRequestError) {
@@ -25,7 +26,7 @@ export function handleError(error) {
       text: "Bad Request Error",
       shown: true,
       color: "error",
-      id: "error--forbidden",
+      id: "error--bad-request",
     };
     snackbar.setMessage(data);
   } else if (error instanceof ForbiddenError) {
@@ -41,7 +42,7 @@ export function handleError(error) {
       text: "Internal Server Error",
       shown: true,
       color: "error",
-      id: "error--forbidden",
+      id: "error--internal-server",
     };
     snackbar.setMessage(data);
   } else if (error instanceof UserCredentialsError) {
@@ -49,7 +50,15 @@ export function handleError(error) {
       text: "User Credentials Doesnot match.",
       shown: true,
       color: "error",
-      id: "error--forbidden",
+      id: "error--credentials",
+    };
+    snackbar.setMessage(data);
+  } else if (error instanceof NotFoundError) {
+    let data = {
+      text: "Data Not Found.",
+      shown: true,
+      color: "error",
+      id: "error--not-found",
     };
     snackbar.setMessage(data);
   } else {
