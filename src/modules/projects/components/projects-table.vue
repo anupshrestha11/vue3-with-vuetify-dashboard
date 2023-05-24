@@ -1,4 +1,3 @@
-/* eslint-disable */
 <script setup>
 import { computed } from "vue";
 import { useProjectsStore } from "../store";
