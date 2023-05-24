@@ -20,6 +20,14 @@ const routes = [
         },
       },
       {
+        path: "/projects",
+        name: "projects",
+        component: () => import("@/modules/projects/projects-page.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
+      {
         path: "/properties",
         name: "properties",
         component: () => import("@/modules/properties/page_view.vue"),
@@ -28,9 +36,17 @@ const routes = [
         },
       },
       {
-        path: "/projects",
-        name: "projects",
-        component: () => import("@/modules/projects/projects-page.vue"),
+        path: "/users",
+        name: "users",
+        component: ()=>import("@/modules/users/users-page.vue"),
+        meta:{
+          layout: "auth",
+        },
+      },
+      {
+        path: "/bookings",
+        name: "bookings",
+        component: ()=>import("@/modules/bookings/booking-page-vue"),
         meta: {
           layout: "auth",
         },
