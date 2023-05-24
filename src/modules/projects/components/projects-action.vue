@@ -35,7 +35,6 @@ function submit() {
   projectForm.value.validate().then(({ valid }) => {
     if (valid) {
       const data = getData();
-      console.log(data);
 
       store
         .addProject(data)
