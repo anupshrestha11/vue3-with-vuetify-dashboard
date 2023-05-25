@@ -46,7 +46,15 @@ const routes = [
       {
         path: "/bookings",
         name: "bookings",
-        component: ()=>import("@/modules/bookings/booking-page-vue"),
+        component: ()=>import("@/modules/bookings/booking-page.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
+      {
+        path: "/roles",
+        name: "roles",
+        component: ()=>import("@/modules/roles/role-page.vue"),
         meta: {
           layout: "auth",
         },

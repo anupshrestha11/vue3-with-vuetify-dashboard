@@ -82,7 +82,7 @@ function clearForm() {
 }
 </script>
 <template>
-  <v-dialog v-model="state.dialog" width="800" persistent>
+  <v-dialog v-model="state.dialog" width="800" persistent scrollable>
     <template v-slot:activator="{ props }">
       <v-btn color="primary" v-bind="props"> Add Project </v-btn>
     </template>
@@ -90,7 +90,7 @@ function clearForm() {
       <v-card>
         <v-card-title> Add Project </v-card-title>
 
-        <v-card-text>
+        <v-card-text style="height: 70vh; max-height: 100%;">
           <v-text-field
             label="Title"
             hint="Enter the title of the project"

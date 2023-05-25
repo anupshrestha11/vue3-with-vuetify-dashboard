@@ -7,6 +7,12 @@ const sidebarRoutes = [
     icon: "mdi-view-dashboard",
   },
   {
+    title: "Roles",
+    value: "roles",
+    pathName: "roles",
+    icon: "mdi-account-key",
+  },
+  {
     title: "Users",
     value: "users",
     pathName: "users",
