@@ -22,6 +22,8 @@ export const useProjectsStore = defineStore("projectsPage", {
     projectsPagination: null,
     editIntex: -1,
     editItem: { ...defaultItem },
+    dialog: false,
+    valid: false,
   }),
   actions: {
     fetchProvinces() {

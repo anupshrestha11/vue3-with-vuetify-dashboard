@@ -7,6 +7,18 @@ import { handleError } from "@/utils/error";
 const store = useProjectsStore();
 store.fetchProjects().catch(handleError);
 const projects = computed(() => store.projects);
+
+function editItem(sn) {
+  let editItem = projects.value.find((item) => {
+    return item.sn === sn;
+  });
+  // TODO: Remove this line
+  return editItem;
+  // TODO: Update form title
+  // TODO: Update Edit Index
+  // TODO: update Edit Item
+  // TODO: Open Action Dialog
+}
 </script>
 
 <template>
@@ -25,7 +37,7 @@ const projects = computed(() => store.projects);
           ).title || item.status
         }}
       </template>
-      <template v-slot:[`item.action`]="{}">
+      <template v-slot:[`item.action`]="{ item }">
         <v-tooltip text="View Project" location="bottom">
           <template v-slot:activator="{ props }">
             <v-btn
@@ -46,6 +58,7 @@ const projects = computed(() => store.projects);
               size="x-small"
               class="mx-2"
               color="warning"
+              @click="editItem(item.columns.sn)"
             ></v-btn>
           </template>
         </v-tooltip>
