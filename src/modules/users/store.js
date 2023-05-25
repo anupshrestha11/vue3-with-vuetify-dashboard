@@ -29,7 +29,7 @@ export const useUserStore = defineStore("usersPage", {
     addUser(data) {
       return service.addUser(data);
     },
-    fetchUsers(data) {
+    fetchUsers(data = { page: 1, page_size: 10 }) {
       return service.fetchUsers(data).then((response) => {
         this.users = response.data.data.map((item, idx) => ({
           ...item,
