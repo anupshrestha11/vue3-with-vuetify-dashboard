@@ -20,10 +20,11 @@ export const useProjectsStore = defineStore("projectsPage", {
     municipalities: [],
     projects: [],
     projectsPagination: null,
-    editIntex: -1,
+    editIndex: -1,
     editItem: { ...defaultItem },
     dialog: false,
     valid: false,
+    formTitle: "Add Project",
   }),
   actions: {
     fetchProvinces() {
@@ -59,6 +60,9 @@ export const useProjectsStore = defineStore("projectsPage", {
     addProject(data) {
       return service.addProject(data);
     },
+    updateProject(id, data) {
+      return service.updateProject(id, data);
+    },
     fetchProjects(data = {}) {
       return service.fetchProjects(data).then((response) => {
         this.projects = response.data.data.map((item, idx) => ({
@@ -68,8 +72,46 @@ export const useProjectsStore = defineStore("projectsPage", {
         this.projectsPagination = response.data.meta;
       });
     },
+    deleteProject(id) {
+      return service.deleteProject(id);
+    },
     clearForm() {
       this.editItem = Object.assign({}, defaultItem);
+      this.formTitle = "Add Project";
+      this.editIndex = null;
+    },
+    updateFormTitle(title) {
+      this.formTitle = title;
+    },
+    updateEditItem(editItem) {
+      const {
+        title,
+        description,
+        province_id: provinceId,
+        district_id: districtId,
+        municipality_id: municipalityId,
+        ward,
+        tole,
+        images,
+        status,
+      } = editItem;
+      this.editItem = {
+        title,
+        description,
+        provinceId,
+        districtId,
+        municipalityId,
+        ward,
+        tole,
+        images,
+        status,
+      };
+    },
+    updateEditIndex(id) {
+      this.editIndex = id;
+    },
+    openDialog(dialog = true) {
+      this.dialog = dialog;
     },
   },
 });

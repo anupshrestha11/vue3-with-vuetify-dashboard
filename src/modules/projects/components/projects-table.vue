@@ -3,22 +3,36 @@ import { computed } from "vue";
 import { useProjectsStore } from "../store";
 import { headers, projectsStatus } from "../util";
 import { handleError } from "@/utils/error";
+import { onMounted } from "vue";
 
 const store = useProjectsStore();
-store.fetchProjects().catch(handleError);
 const projects = computed(() => store.projects);
+
+function loadItems() {
+  store.fetchProjects().catch(handleError);
+}
 
 function editItem(sn) {
   let editItem = projects.value.find((item) => {
     return item.sn === sn;
   });
-  // TODO: Remove this line
-  return editItem;
-  // TODO: Update form title
-  // TODO: Update Edit Index
-  // TODO: update Edit Item
-  // TODO: Open Action Dialog
+  store.updateFormTitle("Edit Project");
+  store.updateEditItem(editItem);
+  store.updateEditIndex(editItem.id);
+  store.openDialog();
 }
+
+function deleteItem(sn) {
+  let project = projects.value.find((item) => {
+    return item.sn === sn;
+  });
+  let val = confirm(`Are you sure to delete this (${editItem.title}) project?`);
+  if (val) {
+    store.deleteProject(project.id).then(loadItems).catch(handleError);
+  }
+}
+
+onMounted(loadItems);
 </script>
 
 <template>
@@ -58,7 +72,7 @@ function editItem(sn) {
               size="x-small"
               class="mx-2"
               color="warning"
-              @click="editItem(item.columns.sn)"
+              @click.stop="editItem(item.columns.sn)"
             ></v-btn>
           </template>
         </v-tooltip>
@@ -70,6 +84,7 @@ function editItem(sn) {
               variant="tonal"
               size="x-small"
               color="red"
+              @click.stop="deleteItem(item.columns.sn)"
             ></v-btn>
           </template>
         </v-tooltip>

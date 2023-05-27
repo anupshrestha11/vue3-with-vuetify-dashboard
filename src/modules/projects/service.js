@@ -26,8 +26,23 @@ function addProject(data) {
     })
     .catch(commonErrorHandler);
 }
+
+function updateProject(id, data) {
+  return http
+    .put(`/project/${id}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .catch(commonErrorHandler);
+}
+
 function fetchProjects(data) {
   return http.get("/project", { params: data }).catch(commonErrorHandler);
+}
+
+function deleteProject(id) {
+  return http.delete(`/project/${id}`).catch(commonErrorHandler);
 }
 
 export default {
@@ -36,4 +51,6 @@ export default {
   fetchMunicipalities,
   addProject,
   fetchProjects,
+  deleteProject,
+  updateProject,
 };

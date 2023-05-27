@@ -7,8 +7,16 @@ import { storeToRefs } from "pinia";
 
 const store = useProjectsStore();
 const projectForm = ref(null);
-const { editItem, provinces, districts, municipalities, dialog, valid } =
-  storeToRefs(store);
+const {
+  editItem,
+  provinces,
+  districts,
+  municipalities,
+  dialog,
+  valid,
+  formTitle,
+  editIndex,
+} = storeToRefs(store);
 
 function fetchDistrices() {
   store.fetchDistrices(editItem.value.provinceId).catch(handleError);
@@ -22,13 +30,23 @@ function submit() {
   projectForm.value.validate().then(({ valid }) => {
     if (valid) {
       const data = getFormattedData();
-      store
-        .addProject(data)
-        .then(() => {
-          closeDialog();
-          store.fetchProjects();
-        })
-        .catch(handleError);
+
+      if (!editIndex.value)
+        store
+          .addProject(data)
+          .then(() => {
+            closeDialog();
+            store.fetchProjects();
+          })
+          .catch(handleError);
+      else
+        store
+          .updateProject(editIndex.value, data)
+          .then(() => {
+            closeDialog();
+            store.fetchProjects();
+          })
+          .catch(handleError);
     }
   });
 }
@@ -59,13 +77,9 @@ function getFormattedData() {
 }
 
 const closeDialog = () => {
-  clearForm();
-  dialog.value = false;
-};
-
-function clearForm() {
   store.clearForm();
-}
+  store.openDialog(false);
+};
 
 onMounted(() => {
   store.fetchProvinces().catch(handleError);
@@ -82,7 +96,7 @@ const rules = {
     </template>
     <v-form :valid="valid" @submit.prevent="submit" ref="projectForm">
       <v-card>
-        <v-card-title> Add Project </v-card-title>
+        <v-card-title> {{ formTitle }} </v-card-title>
 
         <v-card-text>
           <v-text-field

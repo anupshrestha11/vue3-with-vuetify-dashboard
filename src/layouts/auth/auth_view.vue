@@ -24,11 +24,13 @@ function railDrawer(rail) {
 </script>
 
 <template>
-  <v-app-bar color="primary">
-    <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
-    <v-app-bar-title>Legends</v-app-bar-title>
-    <v-spacer></v-spacer>
-    <v-btn icon="mdi-logout" @click="logout"></v-btn>
+  <v-app-bar color="primary" title="Legends">
+    <template v-slot:prepend>
+      <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
+    </template>
+    <template v-slot:append>
+      <v-btn icon="mdi-logout" @click="logout"></v-btn>
+    </template>
   </v-app-bar>
 
   <v-navigation-drawer elevation="2" v-model="toggle" :rail="rail">
