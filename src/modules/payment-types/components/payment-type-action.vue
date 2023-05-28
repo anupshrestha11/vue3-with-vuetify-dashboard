@@ -1,14 +1,12 @@
 <script setup>
 import { reactive, computed, onMounted, ref } from "vue";
-import { useRolesStore } from "../store";
+import { usePaymentTypeStore } from "../store";
 import { handleError } from "@/utils/error";
 
 
-const store = useRolesStore();
+const store = usePaymentTypeStore();
 
-const role = computed(() => store.editItem);
-store.fetchPermissions()
-const permissions = computed(() => store.permissions);
+const paymentType = computed(() => store.editItem);
 
 const state = reactive({
   dialog: false,
@@ -16,18 +14,18 @@ const state = reactive({
 });
 
 
-const roleForm = ref(null);
+const paymentTypeForm = ref(null);
 
 function submit() {
-  roleForm.value.validate().then(({ valid }) => {
+  paymentTypeForm.value.validate().then(({ valid }) => {
     if (valid) {
       const data = getData();
 
       store
-        .addRole(data)
+        .addPaymentType(data)
         .then(() => {
           closeDialog();
-          store.fetchRoles();
+          store.fetchPaymentTypes();
         })
         .catch(handleError);
     }
@@ -36,13 +34,13 @@ function submit() {
 
 function getData() {
   const {
-    name,
-    permission,
-  } = role.value;
+    title,
+    description,
+  } = paymentType.value;
 
   return {
-    name,
-    permission,
+    title,
+    description,
   };
 }
 
@@ -58,19 +56,24 @@ function clearForm() {
 <template>
   <v-dialog v-model="state.dialog" width="800" persistent scrollable>
     <template v-slot:activator="{ props }">
-      <v-btn color="primary" v-bind="props"> Add Role </v-btn>
+      <v-btn color="primary" v-bind="props"> Add Payment Type </v-btn>
     </template>
-    <v-form :valid="state.form" @submit.prevent="submit" ref="roleForm">
+    <v-form :valid="state.form" @submit.prevent="submit" ref="paymentTypeForm">
       <v-card>
-        <v-card-title> Add Role </v-card-title>
+        <v-card-title>Add Payment Type</v-card-title>
         <v-card-text style="height: 50vh; max-height: 100%;">
           <v-text-field
-            label="Name"
-            hint="Enter Role name"
-            v-model="role.name"
+            label="Title"
+            hint="Enter Payment Title"
+            v-model="paymentType.title"
           ></v-text-field>
-          
-          <v-select :items="permissions" v-model="role.permission" multiple chips></v-select>
+
+          <v-textarea
+            label= "Description"
+            hint = "Enter description"
+            v-model="paymentType.description"
+          ></v-textarea>
+
         </v-card-text>
         
         <v-card-actions>

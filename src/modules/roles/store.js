@@ -12,6 +12,7 @@ export const useRolesStore = defineStore("rolesPage", {
     permissions: [],
     editIntex: -1,
     editItem: { ...defaultItem },
+
   }),
   actions: {
     fetchPermissions() {

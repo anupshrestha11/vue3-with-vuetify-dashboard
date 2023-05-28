@@ -59,6 +59,14 @@ const routes = [
           layout: "auth",
         },
       },
+      {
+        path: "/payment-types",
+        name: "payment-types",
+        component: ()=>import("@/modules/payment-types/payment-type-page.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
     ],
   },
   {

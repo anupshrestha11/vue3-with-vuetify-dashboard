@@ -19,6 +19,12 @@ const sidebarRoutes = [
     icon: "mdi-account-multiple-outline",
   },
   {
+    title: "Payment Types",
+    value: "Payment types",
+    pathName: "payment-types",
+    icon: "mdi-currency-usd",
+  },
+  {
     title: "Projects",
     value: "projects",
     pathName: "projects",
