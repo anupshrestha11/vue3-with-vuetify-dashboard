@@ -1,20 +1,27 @@
 import { defineStore } from "pinia";
 import service from "./service";
 
+
+const defaultItem = {
+    first_name: null,
+    middle_name: null,
+    last_name: null,
+    email: null,
+    password: null,
+    role: null,
+};
+
 export const useUserStore = defineStore("usersPage", {
     state: ()=> ({
-        form: {
-           first_name: null,
-           middle_name: null,
-           last_name: null,
-           email: null,
-           password: null,
-           role: null,
-
-        },
         roles: [],
         users: [],
-        usersPagination: null
+        user:[],
+        usersPagination: null,
+        editIndex: -1,
+        editItem: {...defaultItem},
+        dialog: false,
+        valid: false,
+        formTitle: "Add User"
     }),
     actions:{
         fetchRoles(){
@@ -30,6 +37,12 @@ export const useUserStore = defineStore("usersPage", {
         addUser(data){
             return service.addUser(data);
         },
+        updateUser(id, data){
+            return service.updateUser(id, data);
+        },
+        deleteUser(id){
+            return service.deleteUser(id);
+        },
         fetchUsers(){
             return service.fetchUsers().then((response) => {
                 this.users = response.data.data.map((item, idx)=> ({
@@ -39,15 +52,50 @@ export const useUserStore = defineStore("usersPage", {
                 this.usersPagination = response.data.meta
             });
         },
+
+        fetchUser(id){
+            return service.fetchUser(id).then((response) => {
+                this.user = response.data.data;
+            });
+        },
+
+
         clearForm(){
-            this.form ={
-                first_name: null,
-                middle_name: null,
-                last_name: null,
-                email: null,
-                password: null,
-                role: null,
-            }
+            this.editItem = Object.assign({}, defaultItem);
+            this.editIndex = null;
+            this.formTitle = "Add User";
+        },
+
+        updateFormTitle(title){
+            this.formTitle = title;
+        },
+
+        updateEditItem(editItem){
+            const{
+                first_name,
+                middle_name,
+                last_name,
+                email,
+                password,
+                role,
+            } = editItem;
+
+            this.editItem = {
+                first_name,
+                middle_name,
+                last_name,
+                email,
+                password,
+                role,
+            };
+        },
+
+        updateEditIndex(id){
+            this.editIndex = id;
+        },
+
+        openDialog(dialog = true){
+            this.dialog = dialog;
         }
     },
 });

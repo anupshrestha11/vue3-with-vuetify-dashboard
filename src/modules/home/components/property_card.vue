@@ -1,16 +1,23 @@
-<script setup></script>
+<script setup>
+defineProps({
+  id:Number,
+  title: String,
+  image_url: String,
+  district: String,
+});
+</script>
 <template>
   <v-card>
     <v-img
-      src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-      height="200px"
+      :src="image_url"
+      height="150"
       cover
     ></v-img>
-    <v-card-title> Top western road trips </v-card-title>
-    <v-card-subtitle> 1,000 miles of wonder </v-card-subtitle>
+    <v-card-title> {{ title  }} </v-card-title>
+    <v-card-subtitle> {{ district }}</v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" variant="text">Explore</v-btn>
+      <v-btn :to="({ name: 'project-details', params: { id } })" color="primary" variant="text">Explore</v-btn>
     </v-card-actions>
   </v-card>
 </template>

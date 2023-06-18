@@ -5,6 +5,7 @@ const sidebarRoutes = [
     value: "dashboard",
     pathName: "home",
     icon: "mdi-view-dashboard",
+    
   },
   {
     title: "Roles",
@@ -54,6 +55,7 @@ const sidebarRoutes = [
       :title="route.title"
       :value="route.value"
       :to="{ name: route.pathName }"
+
     ></v-list-item>
   </v-list>
 </template>

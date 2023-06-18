@@ -2,105 +2,129 @@
     import { reactive, ref, onMounted, computed } from 'vue';
     import { useUserStore } from '../store';
     import { handleError } from 'vue';
+    import { storeToRefs } from 'pinia';
 
+    
     const store = useUserStore();
+    const userForm = ref(null);
 
-    const user = computed(()=> store.form);
-    const roles = computed(()=> store.roles);
+    const{
+        editItem,
+        roles,
+        dialog,
+        formTitle,
+        editIndex,
+    } = storeToRefs(store);
     
     onMounted(()=> {
         store.fetchRoles();
     });  
     
-    const state = reactive({
-        dialog: false,
-        form: false,
-    });
-
-    const userForm = ref(null);
 
     function submit(){
         userForm.value.validate().then(({valid})=>{
             if(valid) {
-                const data = {
-                    first_name: user.value.firstName,
-                    middle_name: user.value.middleName,
-                    last_name: user.value.lastName,
-                    email: user.value.email,
-                    password: user.value.password,
-                    role: user.value.role
-                };
+                const data = getFormattedData();
+
+                if(editIndex.value == -1)
                 store.addUser(data).then(()=> {
                     closeDialog();
                     store.fetchUsers();
                 }).catch(handleError)
+                else
+                store.updateUser(editIndex.value, data).then( ()=> {
+                    closeDialog();
+                    store.fetchUsers();
+                }).catch(handleError);
             }
-        })
+        });
+    }
+
+    function getFormattedData(){
+        const {
+            first_name,
+            middle_name,
+            last_name,
+            email,
+            password ,
+            role,         
+        }= editItem.value;
+
+        return {
+            first_name,
+            middle_name,
+            last_name,
+            email,
+            password ,
+            role, 
+        }
     }
 
     const closeDialog = ()=>{
-        clearForm();
-        state.dialog = false;
-    }
-
-    function clearForm(){
         store.clearForm();
-    }
+        store.openDialog(false);
+    };
+
+    const rules = {
+        required: (v)=> !!v || "Required"
+    };
+    
+    
 </script>
 
 
 <template>
-    <v-dialog v-model="state.dialog" width="800" scrollable persistent>
+    <v-dialog v-model="dialog" width="800" scrollable persistent>
         <template v-slot:activator="{ props }">
             <v-btn color="primary" v-bind="props">Add User</v-btn>
         </template>
-        <v-form :valid="state.form" @submit.prevent="submit" ref="userForm">
+        <v-form :valid="valid" @submit.prevent="submit" ref="userForm">
             <v-card>
                 <v-card-title>Add User</v-card-title>
                 <v-card-text style="height=60vh; max-width:100%;">
-                    
+                        {{ editItem }}
                     <v-text-field 
                         label="First Name"
-                        v-model="user.firstName"
+                        v-model="editItem.first_name"
                         hint="Enter first name"
                     ></v-text-field>
 
                     <v-text-field 
                         label="Middle Name"
-                        v-model="user.middleName"
+                        v-model="editItem.middle_name"
                         hint="Enter middle name"
                     ></v-text-field>
 
                     <v-text-field 
                         label="last Name"
-                        v-model="user.lastName"
+                        v-model="editItem.last_name"
                         hint="Enter Last name"
                     ></v-text-field>
 
                     <v-text-field 
                         label="Email"
                         type="email"
-                        v-model="user.email"
+                        v-model="editItem.email"
                         hint="Enter Email"
                     ></v-text-field>
 
                     <v-text-field 
                         label="Password"
                         type="password"
-                        v-model="user.password"
+                        v-model="editItem.password"
                         hint="Enter Last name"
                     ></v-text-field>
 
                     <v-select
                         label="Assign role"
-                        v-model="user.role"
+                        v-model="editItem.role"
                         :items="roles"
                     ></v-select>
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn @click="closeDialog" color="warning" variant="elevated">Close</v-btn>
-                        <v-btn type="submit" color="primary" variant="elevated">Add</v-btn>
+                        <v-btn type="submit" color="primary" variant="elevated">Submit</v-btn>
                     </v-card-actions>
 
                 </v-card-text>

@@ -19,7 +19,7 @@ const paymentTypes =  computed(() => store.paymentTypes);
       :height="paymentTypes.length > 12 ? '70vh' : '100%'"
       fixed-header
     >
-      <template v-slot:[`item.action`]="{}">
+      <!-- <template v-slot:[`item.action`]="{}">
         <v-tooltip text="Edit Payment type" location="bottom">
           <template v-slot:activator="{ props }">
             <v-btn
@@ -43,7 +43,7 @@ const paymentTypes =  computed(() => store.paymentTypes);
             ></v-btn>
           </template>
         </v-tooltip>
-      </template>
+      </template> -->
     </v-data-table-virtual>
   </v-card>
 </template>

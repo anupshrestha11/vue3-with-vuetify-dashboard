@@ -67,6 +67,42 @@ const routes = [
           layout: "auth",
         },
       },
+
+      {
+        path: "/project-details/:id",
+        name: "project-details",
+        component: ()=>import("@/modules/projects/components/project-details.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
+      {
+        path: "/property-details/:id",
+        name: "property-details",
+        component: ()=>import("@/modules/properties/components/property-details.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
+
+      {
+        path: "/booking-details/:id",
+        name: "booking-details",
+        component: ()=>import("@/modules/bookings/components/booking-details.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
+
+      {
+        path: "/user-details/:id",
+        name: "user-details",
+        component: ()=> import("@/modules/users/components/user-details.vue"),
+        meta: {
+          layout: "auth",
+        },
+      },
+
     ],
   },
   {

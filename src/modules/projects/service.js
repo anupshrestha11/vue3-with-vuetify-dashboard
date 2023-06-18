@@ -26,8 +26,32 @@ function addProject(data) {
     })
     .catch(commonErrorHandler);
 }
+
+function updateProject(id, data) {
+  return http
+    .put(`/project/${id}`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .catch(commonErrorHandler);
+}
+
 function fetchProjects(data) {
   return http.get("/project", { params: data }).catch(commonErrorHandler);
+}
+
+function fetchSingleProject(id)
+{
+  return http.get(`/project/${id}`).catch(commonErrorHandler);
+}
+
+function fetchProjectStatus(){
+  return http.get("/projectStatus").catch(commonErrorHandler);
+}
+
+function deleteProject(id) {
+  return http.delete(`/project/${id}`).catch(commonErrorHandler);
 }
 
 export default {
@@ -36,4 +60,8 @@ export default {
   fetchMunicipalities,
   addProject,
   fetchProjects,
+  deleteProject,
+  updateProject,
+  fetchSingleProject,
+  fetchProjectStatus,
 };

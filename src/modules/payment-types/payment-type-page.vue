@@ -5,6 +5,6 @@ import PaymentTypeTable from "./components/payment-type-table.vue";
 </script>
 <template>
   <h1 class="mb-4">Payment Types</h1>
-  <PaymentTypeAction></PaymentTypeAction>
+  <!-- <PaymentTypeAction></PaymentTypeAction> -->
   <PaymentTypeTable></PaymentTypeTable>
 </template>

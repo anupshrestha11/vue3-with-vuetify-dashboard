@@ -2,27 +2,31 @@
 import { reactive, computed, onMounted, ref } from "vue";
 import { useRolesStore } from "../store";
 import { handleError } from "@/utils/error";
+import { storeToRefs } from "pinia";
 
 
 const store = useRolesStore();
-
-const role = computed(() => store.editItem);
-store.fetchPermissions()
-const permissions = computed(() => store.permissions);
-
-const state = reactive({
-  dialog: false,
-  form: false,
-});
-
-
 const roleForm = ref(null);
+const{
+  editItem,
+  roles,
+  permissions,
+  dialog,
+  formTitle,
+  editIndex,
+} = storeToRefs(store)
+
+onMounted( () => {
+  store.fetchRoles();
+  store.fetchPermissions();
+});
 
 function submit() {
   roleForm.value.validate().then(({ valid }) => {
     if (valid) {
-      const data = getData();
+      const data = getFormattedData();
 
+      if(editIndex.value == -1)
       store
         .addRole(data)
         .then(() => {
@@ -30,15 +34,20 @@ function submit() {
           store.fetchRoles();
         })
         .catch(handleError);
+      else
+      store.updateRole(editIndex.value, data).then( () => {
+        closeDialog();
+        store.fetchRoles();
+      }).catch(handleError);
     }
   });
 }
 
-function getData() {
+function getFormattedData() {
   const {
     name,
     permission,
-  } = role.value;
+  } = editItem.value;
 
   return {
     name,
@@ -47,30 +56,30 @@ function getData() {
 }
 
 const closeDialog = () => {
-  clearForm();
-  state.dialog = false;
+  store.clearForm();
+  store.openDialog(false);
 };
 
-function clearForm() {
-  store.clearForm();
-}
+const rules = {
+  required: (v)=> !!v || "Required"
+};
 </script>
 <template>
-  <v-dialog v-model="state.dialog" width="800" persistent scrollable>
+  <v-dialog v-model="dialog" width="800" persistent scrollable>
     <template v-slot:activator="{ props }">
       <v-btn color="primary" v-bind="props"> Add Role </v-btn>
     </template>
-    <v-form :valid="state.form" @submit.prevent="submit" ref="roleForm">
+    <v-form :valid="valid" @submit.prevent="submit" ref="roleForm">
       <v-card>
-        <v-card-title> Add Role </v-card-title>
+        <v-card-title> {{ formTitle }} </v-card-title>
         <v-card-text style="height: 50vh; max-height: 100%;">
           <v-text-field
             label="Name"
             hint="Enter Role name"
-            v-model="role.name"
+            v-model="editItem.name"
           ></v-text-field>
           
-          <v-select :items="permissions" v-model="role.permission" multiple chips></v-select>
+          <v-select label="Choose Persmissions" :items="permissions" v-model="editItem.permission" multiple chips></v-select>
         </v-card-text>
         
         <v-card-actions>
@@ -78,7 +87,7 @@ function clearForm() {
           <v-btn @click="closeDialog" color="warning" variant="elevated"
             >Close</v-btn
           >
-          <v-btn type="submit" color="primary" variant="elevated">Add</v-btn>
+          <v-btn type="submit" color="primary" variant="elevated">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

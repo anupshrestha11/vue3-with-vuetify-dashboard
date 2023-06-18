@@ -19,9 +19,14 @@ export const useProjectsStore = defineStore("projectsPage", {
     districts: [],
     municipalities: [],
     projects: [],
+    project:[],
+    projectStatus:[],
     projectsPagination: null,
-    editIntex: -1,
+    editIndex: null,
     editItem: { ...defaultItem },
+    dialog: false,
+    valid: false,
+    formTitle: "Add Project",
   }),
   actions: {
     fetchProvinces() {
@@ -54,8 +59,21 @@ export const useProjectsStore = defineStore("projectsPage", {
         });
       });
     },
+    fetchProjectStatus(){
+      return service.fetchProjectStatus().then( (response) => {
+        this.projectStatus = response.data.map( (item) => {
+          return {
+            title: item.name,
+            value: item.value, 
+          };
+        });
+      });
+    },
     addProject(data) {
       return service.addProject(data);
+    },
+    updateProject(id, data) {
+      return service.updateProject(id, data);
     },
     fetchProjects(data = {}) {
       return service.fetchProjects(data).then((response) => {
@@ -66,8 +84,49 @@ export const useProjectsStore = defineStore("projectsPage", {
         this.projectsPagination = response.data.meta;
       });
     },
+    deleteProject(id) {
+      return service.deleteProject(id);
+    },
+    fetchSingleProject(id){
+      return service.fetchSingleProject(id).then((response) => {
+        this.project = response.data.data;
+      });
+    },
     clearForm() {
       this.editItem = Object.assign({}, defaultItem);
+      this.formTitle = "Add Project";
+      this.editIndex = null;
+    },
+    updateFormTitle(title) {
+      this.formTitle = title;
+    },
+    updateEditItem(editItem) {
+      const {
+        title,
+        description,
+        province_id: provinceId,
+        district_id: districtId,
+        municipality_id: municipalityId,
+        ward,
+        tole,
+        status,
+      } = editItem;
+      this.editItem = {
+        title,
+        description,
+        provinceId,
+        districtId,
+        municipalityId,
+        ward,
+        tole,
+        status,
+      };
+    },
+    updateEditIndex(id) {
+      this.editIndex = id;
+    },
+    openDialog(dialog = true) {
+      this.dialog = dialog;
     },
   },
 });

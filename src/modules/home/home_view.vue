@@ -4,44 +4,28 @@ import PropertyCard from "./components/property_card.vue";
 import { useHomePageStore } from "./store";
 import { handleError } from "@/utils/error";
 
+
 const homeStore = useHomePageStore();
+homeStore.fetchProjects().catch(handleError);
+const ourProjects = computed(() => homeStore.projects);
 
-const availableSlots = computed(() => homeStore.availableSlots);
-
-homeStore.fetchPlots().catch(handleError);
 </script>
 <template>
   <v-container>
     <v-row>
-      <v-col class="text-center text-h4">Available Plots</v-col>
+      <v-col class="text-center text-h4">Our Projects</v-col>
     </v-row>
-    <v-row>
+    <v-row >
       <v-col
-        v-for="item in Array(availableSlots).keys()"
-        :key="item"
+        v-for="(project, index) in ourProjects"
+        :key="index"
         cols="12"
         sm="6"
         md="4"
         lg="3"
         xl="2"
       >
-        <property-card></property-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="text-center text-h4 mt-5">Sold Plots</v-col>
-    </v-row>
-    <v-row>
-      <v-col
-        v-for="item in Array(10).keys()"
-        :key="item"
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-        xl="2"
-      >
-        <property-card></property-card>
+        <property-card v-bind="project"></property-card>
       </v-col>
     </v-row>
   </v-container>

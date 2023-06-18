@@ -2,113 +2,125 @@
 import { reactive, computed, onMounted, ref } from "vue";
 import { usePropertiesStore } from "../store";
 import { handleError } from "@/utils/error";
+import { storeToRefs } from "pinia";
 
 const store = usePropertiesStore();
-
-const property = computed(() => store.form);
-const statuses = computed(() => store.statuses);
-const projects = computed(() => store.projects);
-
-onMounted(() => {
-  store.fetchProjects();
-  store.fetchStatuses();
-});
-
-const state = reactive({
-  dialog: false,
-  form: false,
-});
-
-const types = [
-    {
-        title:'land',
-        value: 1
-    },
-    {
-        title: 'building',
-        value: 2
-    }
-];
-
 const propertyForm = ref(null);
+const {
+    editItem,
+    projects,
+    property_type,
+    statuses,
+    dialog,
+    valid,
+    formTitle,
+    editIndex,
+} = storeToRefs(store);
+
 
 function submit() {
     propertyForm.value.validate().then(({ valid }) => {
     if (valid) {
-      const data = {
-        title: property.value.title,
-        property_type: property.value.propertyType,
-        project_id: property.value.projectId,
-        description: property.value.description,
-        lot_no:property.value.lotNo,
-        ward: property.value.ward,
-        images: property.value.images,
-        status: property.value.status,
-      };
-      store
-        .addProperty(data)
-        .then(() => {
-          closeDialog();
-          store.fetchProjects();
-        })
-        .catch(handleError);
+      const data = getFormattedData();
+
+      if(!editIndex.value)
+        store
+          .addProperty(data)
+          .then(() => {
+            closeDialog();
+            store.fetchProperties();
+          })
+          .catch(handleError);
+      else
+          store.updateProperty(editIndex.value, data).then(() => {
+            closeDialog();
+            store.fetchProjects();
+          }).catch(handleError)
     }
   });
 }
 
+function getFormattedData(){
+  const {
+    property_type,
+    title,
+    description,
+    project_id,
+    ward,
+    lot_no,
+    status,
+    images,
+    }= editItem.value;
+
+    return{
+      property_type,
+      title,
+      description,
+      project_id,
+      ward,
+      lot_no,
+      status,
+      images,
+    }
+}
+
+onMounted(() => {
+  store.fetchProjects();
+  store.fetchStatuses();
+  store.fetchPropertyTypes();
+});
+
 const closeDialog = () => {
-  clearForm();
-  state.dialog = false;
+  store.clearForm();
+  store.openDialog(false);
 };
 
-function clearForm() {
-  store.clearForm();
-}
+const rules = {
+  required: (v)=> !!v || "Required",
+};
 </script>
 <template>
-  <v-dialog v-model="state.dialog" width="800" scrollable persistent>
+  <v-dialog v-model="dialog" width="800" scrollable persistent>
     <template v-slot:activator="{ props }">
       <v-btn color="primary" v-bind="props">Add Property</v-btn>
     </template>
-
-    <v-form :valid="state.form" @submit.prevent="submit" ref="propertyForm">
+    <v-form :valid="valid" @submit.prevent="submit" ref="propertyForm">
       <v-card>
-        <v-card-title> Add Property </v-card-title>
-
+        <v-card-title> {{ formTitle }} </v-card-title>
         <v-card-text style="height: 60vh; max-height: 100%;">
             <v-select
                 label="Property Type"
-                v-model="property.propertyType"
-                :items="types"
+                v-model="editItem.property_type"
+                :items="property_type"
             ></v-select>
 
             <v-select
                 label="Select Project"
-                v-model="property.projectId"
+                v-model="editItem.project_id"
                 :items="projects"
             ></v-select>
 
           <v-text-field
             label="Title"
             hint="Enter the title of the Property"
-            v-model="property.title"
+            v-model="editItem.title"
           ></v-text-field>
 
           <v-textarea
             label="Description"
             hint="Enter the description of the project"
-            v-model="property.description"
+            v-model="editItem.description"
           ></v-textarea>
 
-          <v-text-field label="Ward" v-model="property.ward"></v-text-field>
-          <v-text-field label="lot Number" v-model="property.lotNo"></v-text-field>
+          <v-text-field label="Ward" v-model="editItem.ward"></v-text-field>
+          <v-text-field label="lot Number" v-model="editItem.lot_no"></v-text-field>
         
           <v-file-input
             label="Images"
             accept="image/png, image/jpeg"
             prepend-icon=""
             prepend-inner-icon="mdi-camera"
-            v-model="property.images"
+            v-model="editItem.images"
             multiple="2"
             chips
           ></v-file-input>
@@ -116,7 +128,7 @@ function clearForm() {
           <v-select
             label="Status"
             :items="statuses"
-            v-model="property.status"
+            v-model="editItem.status"
           ></v-select>
         </v-card-text>
 
@@ -125,7 +137,7 @@ function clearForm() {
           <v-btn @click="closeDialog" color="warning" variant="elevated"
             >Close</v-btn
           >
-          <v-btn type="submit" color="primary" variant="elevated">Add</v-btn>
+          <v-btn type="submit" color="primary" variant="elevated">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

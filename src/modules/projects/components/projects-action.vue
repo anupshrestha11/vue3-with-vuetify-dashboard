@@ -1,53 +1,60 @@
 <script setup>
-import { reactive, computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useProjectsStore } from "../store";
 import { handleError } from "@/utils/error";
-import { projectsStatus } from "../util";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 const store = useProjectsStore();
+store.fetchProjectStatus().catch(handleError);
+const projectsStatus = computed(() => store.projectStatus);
 
-const project = computed(() => store.editItem);
-
-onMounted(() => {
-  store.fetchProvinces().catch(handleError);
-});
-
-const provinces = computed(() => store.provinces);
-const districts = computed(() => store.districts);
-const municipalities = computed(() => store.municipalities);
-
-const state = reactive({
-  dialog: false,
-  form: false,
-});
+const projectForm = ref(null);
+const {
+  editItem,
+  provinces,
+  districts,
+  municipalities,
+  dialog,
+  valid,
+  formTitle,
+  editIndex,
+} = storeToRefs(store);
 
 function fetchDistrices() {
-  store.fetchDistrices(project.value.provinceId).catch(handleError);
+  store.fetchDistrices(editItem.value.provinceId).catch(handleError);
 }
 
 function fetchMunicipalities() {
-  store.fetchMunicipalities(project.value.districtId).catch(handleError);
+  store.fetchMunicipalities(editItem.value.districtId).catch(handleError);
 }
-
-const projectForm = ref(null);
 
 function submit() {
   projectForm.value.validate().then(({ valid }) => {
     if (valid) {
-      const data = getData();
+      const data = getFormattedData();
 
-      store
-        .addProject(data)
-        .then(() => {
-          closeDialog();
-          store.fetchProjects();
-        })
-        .catch(handleError);
+      if (!editIndex.value)
+        store
+          .addProject(data)
+          .then(() => {
+            closeDialog();
+            store.fetchProjects();
+          })
+          .catch(handleError);
+      else
+        store
+          .updateProject(editIndex.value, data)
+          .then(() => {
+            closeDialog();
+            store.fetchProjects();
+          })
+          .catch(handleError);
     }
   });
 }
 
-function getData() {
+function getFormattedData() {
   const {
     title,
     description,
@@ -58,7 +65,7 @@ function getData() {
     tole,
     images,
     status,
-  } = project.value;
+  } = editItem.value;
   return {
     title,
     ward,
@@ -73,54 +80,73 @@ function getData() {
 }
 
 const closeDialog = () => {
-  clearForm();
-  state.dialog = false;
+  store.clearForm();
+  store.openDialog(false);
 };
 
-function clearForm() {
-  store.clearForm();
-}
+onMounted(() => {
+  store.fetchProvinces().catch(handleError);
+  store.fetchDistrices().catch(handleError);
+  store.fetchMunicipalities().catch(handleError);
+});
+
+const rules = {
+  required: (v) => !!v || "Required",
+};
 </script>
 <template>
-  <v-dialog v-model="state.dialog" width="800" persistent scrollable>
+  <v-dialog v-model="dialog" width="800" persistent scrollable>
     <template v-slot:activator="{ props }">
-      <v-btn color="primary" v-bind="props"> Add Project </v-btn>
+      <v-btn color="primary" v-bind="props"> {{ formTitle }} </v-btn>
     </template>
-    <v-form :valid="state.form" @submit.prevent="submit" ref="projectForm">
+    <v-form :valid="valid" @submit.prevent="submit" ref="projectForm">
       <v-card>
-        <v-card-title> Add Project </v-card-title>
-
-        <v-card-text style="height: 70vh; max-height: 100%;">
+        <v-card-title> {{ formTitle }} </v-card-title>
+       
+        <v-card-text style="height: 60vh; max-height: 100%;">
           <v-text-field
             label="Title"
             hint="Enter the title of the project"
-            v-model="project.title"
+            v-model="editItem.title"
+            :rules="[rules.required]"
           ></v-text-field>
 
           <v-select
             label="Province"
-            v-model="project.provinceId"
+            v-model="editItem.provinceId"
             :items="provinces"
+            :rules="[rules.required]"
             @update:model-value="fetchDistrices"
           ></v-select>
           <v-select
             label="District"
-            v-model="project.districtId"
+            v-model="editItem.districtId"
             :items="districts"
+            :rules="[rules.required]"
             @update:model-value="fetchMunicipalities"
           ></v-select>
           <v-select
             label="Muncipality"
-            v-model="project.municipalityId"
+            v-model="editItem.municipalityId"
             :items="municipalities"
+            :rules="[rules.required]"
           ></v-select>
 
-          <v-text-field label="Ward" v-model="project.ward"></v-text-field>
-          <v-text-field label="Tole" v-model="project.tole"></v-text-field>
+          <v-text-field
+            label="Ward"
+            v-model="editItem.ward"
+            :rules="[rules.required]"
+          ></v-text-field>
+          <v-text-field
+            label="Tole"
+            v-model="editItem.tole"
+            :rules="[rules.required]"
+          ></v-text-field>
           <v-textarea
             label="Description"
             hint="Enter the description of the project"
-            v-model="project.description"
+            v-model="editItem.description"
+            :rules="[rules.required]"
           ></v-textarea>
 
           <v-file-input
@@ -128,7 +154,7 @@ function clearForm() {
             accept="image/png, image/jpeg"
             prepend-icon=""
             prepend-inner-icon="mdi-camera"
-            v-model="project.images"
+            v-model="editItem.images"
             multiple
             chips
           ></v-file-input>
@@ -136,15 +162,16 @@ function clearForm() {
           <v-select
             label="Status"
             :items="projectsStatus"
-            v-model="project.status"
+            v-model="editItem.status"
+            :rules="[rules.required]"
           ></v-select>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="closeDialog" color="warning" variant="elevated"
-            >Close</v-btn
-          >
+            >Close</v-btn>
+            
           <v-btn type="submit" color="primary" variant="elevated">Add</v-btn>
         </v-card-actions>
       </v-card>

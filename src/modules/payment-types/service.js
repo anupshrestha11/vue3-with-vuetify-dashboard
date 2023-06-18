@@ -8,7 +8,7 @@ function addPaymentType(data) {
     .catch(commonErrorHandler);
 }
 function fetchPaymentTypes(data) {
-  return http.get("/payment-type", { params: data }).catch(commonErrorHandler);
+  return http.get("/payment-types", { params: data }).catch(commonErrorHandler);
 }
 
 export default {

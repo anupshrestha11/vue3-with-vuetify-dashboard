@@ -1,16 +1,26 @@
 import { http } from '@/http';
 import { commonErrorHandler } from '@/utils';
 
+function fetchStatus(){
+    return http.get("/status").catch(commonErrorHandler);
+}
+
 function addBooking(data){
     return http.post("/booking", data);
 }
 
-function fetchBookings() {
-    return http.get("/booking").catch(commonErrorHandler);
+function fetchBookings(data) {
+    return http.get("/booking",  { params: data }).catch(commonErrorHandler);
+}
+
+function fetchBooking(id){
+    return http.get(`/booking/${id}`).catch(commonErrorHandler);
 }
 
 export default {
     addBooking,
     fetchBookings,
+    fetchBooking,
+    fetchStatus,
 }
 

@@ -23,3 +23,13 @@ export function commonErrorHandler(error) {
     throw new Error();
   }
 }
+
+is_permitted(role, permision){
+  if (role == "admin"){
+    return true;
+  }
+
+  //TODO _ GET PERMISSIONS FROM ROLE
+  //TOdo - Compare is permision exists in role's permission 
+    // result - exists then true otherwise false
+}

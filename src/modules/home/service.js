@@ -1,10 +1,10 @@
 import { http } from "@/http";
 import { commonErrorHandler } from "@/utils";
 
-function fetchPlots() {
-  return http.get("plots").catch(commonErrorHandler);
+function fetchProjects() {
+  return http.get("/project").catch(commonErrorHandler);
 }
 
 export default {
-  fetchPlots,
+  fetchProjects,
 };

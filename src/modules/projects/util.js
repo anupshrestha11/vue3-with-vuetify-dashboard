@@ -1,17 +1,17 @@
-export const projectsStatus = [
-  {
-    title: "Up-Comming",
-    value: 1,
-  },
-  {
-    title: "On-Going",
-    value: 2,
-  },
-  {
-    title: "Completed",
-    value: 3,
-  },
-];
+// export const projectsStatus = [
+//   {
+//     title: "Up-Comming",
+//     value: 1,
+//   },
+//   {
+//     title: "On-Going",
+//     value: 2,
+//   },
+//   {
+//     title: "Completed",
+//     value: 3,
+//   },
+// ];
 
 export const headers = [
   {

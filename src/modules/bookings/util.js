@@ -11,7 +11,7 @@ export const headers = [
     },
     {
         title: "booked by",
-        key: "booked_by",
+        key: "booked_by_user",
     },
     {
         title: "customer",
@@ -20,5 +20,10 @@ export const headers = [
     {
         title: "status",
         key:"status",
+    },
+    {
+        title: "Action",
+        align: "center",
+        key: "action",
     }
 ];
