@@ -38,15 +38,15 @@ const routes = [
       {
         path: "/users",
         name: "users",
-        component: ()=>import("@/modules/users/users-page.vue"),
-        meta:{
+        component: () => import("@/modules/users/users-page.vue"),
+        meta: {
           layout: "auth",
         },
       },
       {
         path: "/bookings",
         name: "bookings",
-        component: ()=>import("@/modules/bookings/booking-page.vue"),
+        component: () => import("@/modules/bookings/booking-page.vue"),
         meta: {
           layout: "auth",
         },
@@ -54,7 +54,7 @@ const routes = [
       {
         path: "/roles",
         name: "roles",
-        component: ()=>import("@/modules/roles/role-page.vue"),
+        component: () => import("@/modules/roles/role-page.vue"),
         meta: {
           layout: "auth",
         },
@@ -62,7 +62,8 @@ const routes = [
       {
         path: "/payment-types",
         name: "payment-types",
-        component: ()=>import("@/modules/payment-types/payment-type-page.vue"),
+        component: () =>
+          import("@/modules/payment-types/payment-type-page.vue"),
         meta: {
           layout: "auth",
         },
@@ -71,7 +72,8 @@ const routes = [
       {
         path: "/project-details/:id",
         name: "project-details",
-        component: ()=>import("@/modules/projects/components/project-details.vue"),
+        component: () =>
+          import("@/modules/projects/components/project-details.vue"),
         meta: {
           layout: "auth",
         },
@@ -79,7 +81,8 @@ const routes = [
       {
         path: "/property-details/:id",
         name: "property-details",
-        component: ()=>import("@/modules/properties/components/property-details.vue"),
+        component: () =>
+          import("@/modules/properties/components/property-details.vue"),
         meta: {
           layout: "auth",
         },
@@ -88,7 +91,8 @@ const routes = [
       {
         path: "/booking-details/:id",
         name: "booking-details",
-        component: ()=>import("@/modules/bookings/components/booking-details.vue"),
+        component: () =>
+          import("@/modules/bookings/components/booking-details.vue"),
         meta: {
           layout: "auth",
         },
@@ -97,12 +101,11 @@ const routes = [
       {
         path: "/user-details/:id",
         name: "user-details",
-        component: ()=> import("@/modules/users/components/user-details.vue"),
+        component: () => import("@/modules/users/components/user-details.vue"),
         meta: {
           layout: "auth",
         },
       },
-
     ],
   },
   {

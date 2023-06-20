@@ -17,6 +17,7 @@ export const useBookingStore = defineStore("bookingsPage", {
     state: () => ({
             bookings: [],
             booking: [],
+            paymentTypes: [],
             propertyStatus: [],
             bookingsPagination: null,
             editBooking: {...defaultBooking},
@@ -48,6 +49,16 @@ export const useBookingStore = defineStore("bookingsPage", {
         fetchBooking(id){
             return service.fetchBooking(id).then((response) => {
                 this.booking = response.data.data;
+            });
+        },
+        fetchPaymentTypes(){
+            return service.fetchPaymentTypes().then((response) => {
+                this.paymentTypes = response.data.map((item) => {
+                    return{
+                        title: item.name,
+                        value: item.id
+                    };
+                });
             });
         },
         clearForm(){

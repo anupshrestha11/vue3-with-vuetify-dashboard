@@ -13,7 +13,9 @@
     
     const store = useBookingStore();
     store.fetchStatus().catch(handleError);
+    store.fetchPaymentTypes().catch(handleError);
     const propertyStatus = computed( () => store.propertyStatus);
+    const paymentTypes = computed( ()=> store.paymentTypes);
 
     const bookingForm = ref(null);
     const {
@@ -30,7 +32,7 @@
 
     onMounted( (id) => {
         store.fetchStatus().catch(handleError);
-        store.updateBookingPropertyData(props.id, props.status)
+        store.updateBookingPropertyData(props.id, 'Booked')
     });
 
     function submit(){
@@ -69,6 +71,10 @@
     const rules = {
       required: (v) => !!v || "Required",
     };
+
+    function handleDate(){
+      console.log('hello');
+    }
 </script>
 
 <template>
@@ -83,12 +89,7 @@
         <v-card-title> Booking - ({{ title }}) </v-card-title>
        
         <v-card-text style="height: 60vh; max-height: 100%;">
-          <!-- <v-text-field
-            label="Property"
-            v-model="editBooking.property_id"
-            readonly            
-          ></v-text-field> -->
-
+          
           <v-text-field
             label="Customer Name"
             v-model="editBooking.customer_name"
@@ -105,13 +106,26 @@
             label="Customer Phone"
             v-model="editBooking.customer_phone"
             
-          ></v-text-field>
-       
-          <v-date-picker
-            label="Valid Till"
-            v-model="editBooking.valid_till"
-          >
-          </v-date-picker>
+          ></v-text-field>         
+          
+          <v-text-field
+            label=" Valid Till"
+            slot="activator"
+            readonly
+            
+            >{{ editBooking.valid_till }}
+            <v-menu activator="parent">
+              <v-date-picker
+                  label =" Valid Till"
+                  color="blue lighten-1"
+                  header-color="primary" 
+                  transition="scale-transition"
+                  v-model="editBooking.valid_till"
+                  @update="handleDate"
+              ></v-date-picker>
+            </v-menu>
+          </v-text-field>
+            
 
           <v-textarea
             label="Remarks"
@@ -119,11 +133,11 @@
             v-model="editBooking.remarks"            
           ></v-textarea>
 
-          <!-- <v-select
-            label="Status"
-            :items="propertyStatus"
-            v-model="editBooking.status"
-          ></v-select> -->
+          <v-select
+            label="Payment Method"
+            :items="paymentTypes"
+            v-model="editBooking.paymentTypes"
+          ></v-select>
         </v-card-text>
 
         <v-card-actions>

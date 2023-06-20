@@ -4,8 +4,10 @@ import { useProjectsStore } from "../store";
 import { handleError } from "@/utils/error";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
+import { useSnackBarStore } from "@/store/snackbar";
 
 const store = useProjectsStore();
+const snackbar = useSnackBarStore();
 store.fetchProjectStatus().catch(handleError);
 const projectsStatus = computed(() => store.projectStatus);
 
@@ -40,6 +42,14 @@ function submit() {
           .then(() => {
             closeDialog();
             store.fetchProjects();
+          }).then(() => {
+            let data = {
+              text: "Project added successfully",
+              shown: true,
+              color: "success",
+              id: "success--project-added",
+            };
+            snackbar.setMessage(data);
           })
           .catch(handleError);
       else
@@ -102,76 +112,33 @@ const rules = {
     <v-form :valid="valid" @submit.prevent="submit" ref="projectForm">
       <v-card>
         <v-card-title> {{ formTitle }} </v-card-title>
-       
+
         <v-card-text style="height: 60vh; max-height: 100%;">
-          <v-text-field
-            label="Title"
-            hint="Enter the title of the project"
-            v-model="editItem.title"
-            :rules="[rules.required]"
-          ></v-text-field>
+          <v-text-field label="Title" hint="Enter the title of the project" v-model="editItem.title"
+            :rules="[rules.required]"></v-text-field>
 
-          <v-select
-            label="Province"
-            v-model="editItem.provinceId"
-            :items="provinces"
-            :rules="[rules.required]"
-            @update:model-value="fetchDistrices"
-          ></v-select>
-          <v-select
-            label="District"
-            v-model="editItem.districtId"
-            :items="districts"
-            :rules="[rules.required]"
-            @update:model-value="fetchMunicipalities"
-          ></v-select>
-          <v-select
-            label="Muncipality"
-            v-model="editItem.municipalityId"
-            :items="municipalities"
-            :rules="[rules.required]"
-          ></v-select>
+          <v-select label="Province" v-model="editItem.provinceId" :items="provinces" :rules="[rules.required]"
+            @update:model-value="fetchDistrices"></v-select>
+          <v-select label="District" v-model="editItem.districtId" :items="districts" :rules="[rules.required]"
+            @update:model-value="fetchMunicipalities"></v-select>
+          <v-select label="Muncipality" v-model="editItem.municipalityId" :items="municipalities"
+            :rules="[rules.required]"></v-select>
 
-          <v-text-field
-            label="Ward"
-            v-model="editItem.ward"
-            :rules="[rules.required]"
-          ></v-text-field>
-          <v-text-field
-            label="Tole"
-            v-model="editItem.tole"
-            :rules="[rules.required]"
-          ></v-text-field>
-          <v-textarea
-            label="Description"
-            hint="Enter the description of the project"
-            v-model="editItem.description"
-            :rules="[rules.required]"
-          ></v-textarea>
+          <v-text-field label="Ward" v-model="editItem.ward" :rules="[rules.required]"></v-text-field>
+          <v-text-field label="Tole" v-model="editItem.tole" :rules="[rules.required]"></v-text-field>
+          <v-textarea label="Description" hint="Enter the description of the project" v-model="editItem.description"
+            :rules="[rules.required]"></v-textarea>
 
-          <v-file-input
-            label="Images"
-            accept="image/png, image/jpeg"
-            prepend-icon=""
-            prepend-inner-icon="mdi-camera"
-            v-model="editItem.images"
-            multiple
-            chips
-          ></v-file-input>
+          <v-file-input label="Images" accept="image/png, image/jpeg" prepend-icon="" prepend-inner-icon="mdi-camera"
+            v-model="editItem.images" multiple chips></v-file-input>
 
-          <v-select
-            label="Status"
-            :items="projectsStatus"
-            v-model="editItem.status"
-            :rules="[rules.required]"
-          ></v-select>
+          <v-select label="Status" :items="projectsStatus" v-model="editItem.status" :rules="[rules.required]"></v-select>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="closeDialog" color="warning" variant="elevated"
-            >Close</v-btn>
-            
+          <v-btn @click="closeDialog" color="warning" variant="elevated">Close</v-btn>
+
           <v-btn type="submit" color="primary" variant="elevated">Add</v-btn>
         </v-card-actions>
       </v-card>

@@ -17,10 +17,16 @@ function fetchBooking(id){
     return http.get(`/booking/${id}`).catch(commonErrorHandler);
 }
 
+function fetchPaymentTypes()
+{
+    return http.get('/payment-types').catch(commonErrorHandler);
+}
+
 export default {
     addBooking,
     fetchBookings,
     fetchBooking,
     fetchStatus,
+    fetchPaymentTypes,
 }
 

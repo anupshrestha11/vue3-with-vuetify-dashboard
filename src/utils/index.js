@@ -24,12 +24,12 @@ export function commonErrorHandler(error) {
   }
 }
 
-is_permitted(role, permision){
-  if (role == "admin"){
-    return true;
-  }
+// is_permitted(role, permision){
+//   if (role == "admin"){
+//     return true;
+//   }
 
-  //TODO _ GET PERMISSIONS FROM ROLE
-  //TOdo - Compare is permision exists in role's permission 
-    // result - exists then true otherwise false
-}
+//   //TODO _ GET PERMISSIONS FROM ROLE
+//   //TOdo - Compare is permision exists in role's permission 
+//     // result - exists then true otherwise false
+// }
